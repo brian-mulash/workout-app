@@ -6,6 +6,25 @@ import { StatusCodes } from "http-status-codes"
 const createWorkout = async (req, res) => {
     try {
         const {title, reps, loads} = req.body;
+
+        let emptyFields = []
+    
+        if (!title) {
+            emptyFields.push('title')
+        }
+    
+        if (!loads) {
+            emptyFields.push('loads')
+        }
+    
+        if (!reps) {
+            emptyFields.push('reps')
+        }
+    
+        if (emptyFields.length > 0) {
+            return res.status(StatusCodes.BAD_REQUEST).json({error: 'please fill in all the fields', emptyFields})
+        }
+
         const workout = await Workout.create({title, reps, loads});
         res.status(StatusCodes.OK).json(workout)
 
